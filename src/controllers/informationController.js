@@ -1,15 +1,12 @@
 const pool = require('../db/pool');
-
-function ok(res, message, data = null) {
-  return res.status(200).json({ status: 0, message, data });
-}
+const { successResponse } = require('../utils/response');
 
 async function getBanners(_req, res, next) {
   try {
     const result = await pool.query(
       'SELECT banner_name, banner_image, description FROM banners ORDER BY id ASC'
     );
-    return ok(res, 'Sukses', result.rows);
+    return successResponse(res, 'Sukses', result.rows);
   } catch (err) {
     next(err);
   }

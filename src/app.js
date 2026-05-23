@@ -5,11 +5,12 @@ const membershipRoutes = require('./routes/membership');
 const informationRoutes = require('./routes/information');
 const transactionRoutes = require('./routes/transaction');
 const errorHandler = require('./middlewares/errorHandler');
+const { successResponse, errorResponse } = require('./utils/response');
 
 const app = express();
 
 app.get('/', (_req, res) => {
-  res.status(200).json({ status: 0, message: 'API is running', data: null });
+  return successResponse(res, 'API is running');
 });
 
 app.use(express.json());
@@ -24,8 +25,8 @@ app.use('/', transactionRoutes);
 
 // multer error passthrough (file format validation)
 app.use((err, req, res, next) => {
-  if (err && err.status === 102) {
-    return res.status(400).json({ status: 102, message: err.message, data: null });
+  if (err && err.statusCode === 400) {
+    return errorResponse(res, err.message, { httpCode: 400 });
   }
   next(err);
 });

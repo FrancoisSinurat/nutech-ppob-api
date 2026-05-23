@@ -1,14 +1,11 @@
 const jwt = require('jsonwebtoken');
+const { errorResponse } = require('../utils/response');
 
 function authenticate(req, res, next) {
   const authHeader = req.headers['authorization'];
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({
-      status: 108,
-      message: 'Token tidak tidak valid atau kadaluwarsa',
-      data: null,
-    });
+    return errorResponse(res, 'Token tidak tidak valid atau kadaluwarsa', { httpCode: 401 });
   }
 
   const token = authHeader.split(' ')[1];
@@ -18,11 +15,7 @@ function authenticate(req, res, next) {
     req.user = payload;
     next();
   } catch {
-    return res.status(401).json({
-      status: 108,
-      message: 'Token tidak tidak valid atau kadaluwarsa',
-      data: null,
-    });
+    return errorResponse(res, 'Token tidak tidak valid atau kadaluwarsa', { httpCode: 401 });
   }
 }
 

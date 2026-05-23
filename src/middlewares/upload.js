@@ -14,7 +14,7 @@ function imageFilter(_req, file, cb) {
   const ext = path.extname(file.originalname).toLowerCase();
   if (!allowed.includes(ext)) {
     return cb(
-      Object.assign(new Error('Format Image tidak sesuai'), { statusCode: 400, status: 102 })
+      Object.assign(new Error('Format Image tidak sesuai'), { statusCode: 400 })
     );
   }
   cb(null, true);

@@ -1,12 +1,5 @@
 const pool = require('../db/pool');
-
-function ok(res, message, data = null) {
-  return res.status(200).json({ status: 0, message, data });
-}
-
-function badRequest(res, message) {
-  return res.status(400).json({ status: 102, message, data: null });
-}
+const { successResponse, errorResponse } = require('../utils/response');
 
 function generateInvoice() {
   const now = new Date();
@@ -21,7 +14,7 @@ function generateInvoice() {
 async function getBalance(req, res, next) {
   try {
     const result = await pool.query('SELECT balance FROM users WHERE email = $1', [req.user.email]);
-    return ok(res, 'Get Balance Berhasil', { balance: Number(result.rows[0].balance) });
+    return successResponse(res, 'Get Balance Berhasil', { balance: Number(result.rows[0].balance) });
   } catch (err) {
     next(err);
   }
@@ -35,7 +28,7 @@ async function topUp(req, res, next) {
     const { top_up_amount } = req.body;
 
     if (top_up_amount === undefined || top_up_amount === null || isNaN(top_up_amount) || Number(top_up_amount) <= 0) {
-      return badRequest(res, 'Paramter amount hanya boleh angka dan tidak boleh lebih kecil dari 0');
+      return errorResponse(res, 'Paramter amount hanya boleh angka dan tidak boleh lebih kecil dari 0');
     }
 
     const amount = Number(top_up_amount);
@@ -80,7 +73,7 @@ async function createTransaction(req, res, next) {
     const { service_code } = req.body;
 
     if (!service_code) {
-      return badRequest(res, 'Service atau Layanan tidak ditemukan');
+      return fail(res, 'Service atau Layanan tidak ditemukan');
     }
 
     const serviceResult = await client.query(
@@ -89,7 +82,7 @@ async function createTransaction(req, res, next) {
     );
 
     if (serviceResult.rows.length === 0) {
-      return badRequest(res, 'Service ataus Layanan tidak ditemukan');
+      return fail(res, 'Service ataus Layanan tidak ditemukan');
     }
 
     const service = serviceResult.rows[0];
@@ -106,7 +99,7 @@ async function createTransaction(req, res, next) {
 
     if (balance < tariff) {
       await client.query('ROLLBACK');
-      return badRequest(res, 'Saldo tidak mencukupi');
+      return fail(res, 'Saldo tidak mencukupi');
     }
 
     const newBalance = balance - tariff;
