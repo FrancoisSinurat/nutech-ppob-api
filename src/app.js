@@ -8,6 +8,10 @@ const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
+app.get('/', (_req, res) => {
+  res.status(200).json({ status: 0, message: 'API is running', data: null });
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
