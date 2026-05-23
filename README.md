@@ -116,7 +116,7 @@ npm start     # production
 ## Deploy ke Railway
 
 1. Push repo ke GitHub
-2. Buka [railway.app](https://railway.app) → New Project → Deploy from GitHub
+2. Buka [railway.app](https:/p/railway.app) → New Project → Deploy from GitHub
 3. Tambahkan service **PostgreSQL** dari Railway
 4. Set environment variables sesuai `.env.example`
 5. Jalankan DDL + seed via Railway shell atau migrasi manual
