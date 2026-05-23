@@ -57,12 +57,12 @@ async function login(req, res, next) {
     const user = result.rows[0];
 
     if (!user) {
-      return errorResponse(res, 'Username atau password salah', { httpCode: 401 });
+      return errorResponse(res, 'Username atau password salah', { httpCode: 401, status: 103 });
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return errorResponse(res, 'Username atau password salah', { httpCode: 401 });
+      return errorResponse(res, 'Username atau password salah', { httpCode: 401, status: 103 });
     }
 
     const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {

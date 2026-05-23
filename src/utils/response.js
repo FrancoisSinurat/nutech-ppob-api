@@ -1,27 +1,24 @@
-function sendResponse(res, { httpCode = 200, success, code, data = null, message }) {
+function sendResponse(res, { httpCode = 200, status, data = null, message }) {
   return res.status(httpCode).json({
-    success,
-    code,
-    data,
+    status,
     message,
+    data,
   });
 }
 
-function successResponse(res, message, data = null, code = 200) {
+function successResponse(res, message, data = null) {
   return sendResponse(res, {
     httpCode: 200,
-    success: true,
-    code,
+    status: 0,
     data,
     message,
   });
 }
 
-function errorResponse(res, message, { httpCode = 400, code = httpCode, data = null } = {}) {
+function errorResponse(res, message, { httpCode = 400, status = 102, data = null } = {}) {
   return sendResponse(res, {
     httpCode,
-    success: false,
-    code,
+    status,
     data,
     message,
   });

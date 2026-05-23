@@ -26,7 +26,7 @@ app.use('/', transactionRoutes);
 // multer error passthrough (file format validation)
 app.use((err, req, res, next) => {
   if (err && err.statusCode === 400) {
-    return errorResponse(res, err.message, { httpCode: 400 });
+    return errorResponse(res, err.message, { httpCode: 400, status: err.status || 102 });
   }
   next(err);
 });
